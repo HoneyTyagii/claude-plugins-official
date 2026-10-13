@@ -274,6 +274,9 @@ def emit_metrics(
     # names on PATH were launcher aliases that cannot read the plugin files.
     if os.environ.get("SG_LAUNCHER_FALLBACK") == "1":
         head["launcher_fallback"] = 1
+    # sg-python.sh skipped this many interpreter names: no answer in time.
+    if os.environ.get("SG_LAUNCHER_PROBE_TIMEOUTS", "").isdecimal():
+        head["launcher_probe_timeout"] = min(int(os.environ["SG_LAUNCHER_PROBE_TIMEOUTS"]), 99)
     head.update(_usage_metrics())
     if head:
         metrics = {**head, **metrics}
